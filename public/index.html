@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>City News</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: black;
+            color: white;
+        }
+        .card {
+            background-color: grey;
+            color: white;
+        }
+        #news {
+            margin-top: 20px;
+        }
+        .article {
+            margin-bottom: 20px;
+        }
+        .article h2 {
+            margin: 0;
+        }
+
+        .btn-custom {
+            background-color: #ffffff5d; /* Change this color code to your desired color */
+            color: rgb(255, 240, 240);
+        }
+        .btn-custom:hover {
+            background-color: #434242; /* Change this color code to your desired hover color */
+            color: white;
+        }
+        .btn-customnews {
+            background-color: #3c3838; /* Change this color code to your desired color */
+            color: rgb(255, 240, 240);
+        }
+        .btn-customnews:hover {
+            background-color: #0d0d0d; /* Change this color code to your desired hover color */
+            color: white;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container text-center">
+        <form id="cityForm" class="form-inline justify-content-center">
+            <input type="text" id="city" class="form-control mb-2 mr-sm-2" placeholder="Enter city name">
+            <button type="submit" class="btn btn-custom mb-2">Get News</button>
+        </form>
+    </div>
+    <div id="news" class="mt-4 mx-5"></div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        document.getElementById('cityForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const city = document.getElementById('city').value;
+            const response = await fetch(`/news/${city}`);
+            const data = await response.json();
+            const newsDiv = document.getElementById('news');
+            newsDiv.innerHTML = '';
+
+            if (data.articles) {
+                data.articles.forEach(article => {
+                    const articleDiv = document.createElement('div');
+                    articleDiv.className = 'card mb-4';
+                    articleDiv.innerHTML = `
+                        <div class="card-body">
+                            <h2 class="card-title">${article.title}</h2>
+                            <p class="card-text">${article.description}</p>
+                            <a href="${article.url}" target="_blank" class="btn btn-customnews">Read more</a>
+                        </div>
+                    `;
+                    newsDiv.appendChild(articleDiv);
+                });
+            } else {
+                newsDiv.innerHTML = '<p>No news found.</p>';
+            }
+        });
+    </script>
+</body>
+</html>
